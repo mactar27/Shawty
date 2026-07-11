@@ -184,7 +184,15 @@
     perspective:1400px;
   }
   @media(max-width:900px){.gallery-grid{grid-template-columns:repeat(2,1fr);}}
-  @media(max-width:560px){.gallery-grid{grid-template-columns:1fr;}}
+  @media(max-width:560px){
+    .gallery-grid{
+      display:flex; overflow-x:auto; scroll-snap-type:x mandatory; 
+      gap:20px; padding-bottom:30px; margin-bottom:-10px;
+      -ms-overflow-style:none; scrollbar-width:none;
+    }
+    .gallery-grid::-webkit-scrollbar { display:none; }
+    .gallery-grid .frame { min-width:82vw; scroll-snap-align:center; }
+  }
 
   .frame{
     position:relative; border-radius:4px; cursor:pointer;
@@ -346,6 +354,15 @@
   #lightbox video { max-width:min(90vw,700px); max-height:82vh; border-radius:3px; box-shadow:0 30px 80px rgba(0,0,0,.5); transform:scale(.92); transition:transform .5s cubic-bezier(.2,.8,.2,1); outline:none; }
   #lightbox.open video { transform:scale(1); }
 
+  /* Mobile Optimizations for the Book */
+  @media (max-width: 760px) {
+    .book { aspect-ratio: auto; display: flex; flex-direction: column; gap: 20px; }
+    .page { position: static; padding: 34px 24px; transform: none !important; opacity: 1 !important; display: block; }
+    .page p { font-size: 1.05rem; line-height: 1.5; }
+    .page h3 { font-size: 1.4rem; margin-bottom: 12px; }
+    .book-nav { display: none; }
+  }
+
   ::-webkit-scrollbar{width:8px;}
   ::-webkit-scrollbar-thumb{background:var(--champagne); border-radius:10px;}
   ::-webkit-scrollbar-track{background:var(--ivoire);}
@@ -353,7 +370,7 @@
 </head>
 <body>
 
-<div id="loader"><div class="petal-mini"></div><span>Astou</span></div>
+<div id="loader"><div class="petal-mini"></div><span>Astou</span><button id="enterBtn" style="margin-top:20px; padding:10px 24px; font-family:'Jost', sans-serif; letter-spacing:0.15em; text-transform:uppercase; font-size:0.7rem; background:transparent; border:1px solid var(--beige-profond); color:var(--beige-profond); border-radius:30px; cursor:pointer; transition:all 0.3s;">Entrer dans l'expérience</button></div>
 
 <nav>
   <div class="brand">Astou</div>
@@ -466,36 +483,36 @@
 <script>
 /* ===================== DATA ===================== */
 const PHOTOS = [
-  { src:"images/1454.jpg", cap:"Le sourire du matin" },
-  { src:"images/1446.jpg", cap:"Un regard qui dit tout" },
-  { src:"images/1069.jpg", cap:"Un instant de douceur" },
-  { src:"images/1441.jpg", cap:"La lumière lui va si bien" },
-  { src:"images/1444.jpg", cap:"Ce petit air malicieux" },
-  { src:"images/1448.jpg", cap:"Elle, tout simplement" },
-  { src:"images/IMG_1431.JPG", cap:"Un souvenir inoubliable" },
-  { src:"images/IMG_1432.JPG", cap:"La beauté à l'état pur" },
-  { src:"images/IMG_1433.JPG", cap:"Rayonnante" },
-  { src:"images/IMG_1434.JPG", cap:"Éclatante de bonheur" },
-  { src:"images/IMG_1435.JPG", cap:"Un moment magique" },
-  { src:"images/IMG_1436.JPG", cap:"Toujours aussi belle" },
-  { src:"images/IMG_1437.JPG", cap:"Une douceur infinie" },
-  { src:"images/IMG_1438.JPG", cap:"Simplement parfaite" },
-  { src:"images/IMG_1439.JPG", cap:"Un charme fou" },
-  { src:"images/IMG_1440.JPG", cap:"Le temps s'arrête" },
-  { src:"images/IMG_1441.JPG", cap:"Sublime" },
-  { src:"images/IMG_1442.JPG", cap:"Précieuse" },
-  { src:"images/IMG_1445.JPG", cap:"Une étincelle" },
-  { src:"images/IMG_1447.JPG", cap:"Magnifique" },
-  { src:"images/IMG_1449.JPG", cap:"Solaire" },
-  { src:"images/IMG_1450.JPG", cap:"Un bel instant" },
-  { src:"images/IMG_1451.JPG", cap:"Divine" },
-  { src:"images/IMG_1452.JPG", cap:"Unique" },
-  { src:"images/IMG_1453.JPG", cap:"Irremplaçable" },
-  { src:"images/IMG_1455.JPG", cap:"Une perle" },
-  { src:"images/IMG_1456.JPG", cap:"Mon évidence" },
+  { src:"images/1454.webp", cap:"Le sourire du matin" },
+  { src:"images/1446.webp", cap:"Un regard qui dit tout" },
+  { src:"images/1069.webp", cap:"Un instant de douceur" },
+  { src:"images/1441.webp", cap:"La lumière lui va si bien" },
+  { src:"images/1444.webp", cap:"Ce petit air malicieux" },
+  { src:"images/1448.webp", cap:"Elle, tout simplement" },
+  { src:"images/IMG_1431.webp", cap:"Un souvenir inoubliable" },
+  { src:"images/IMG_1432.webp", cap:"La beauté à l'état pur" },
+  { src:"images/IMG_1433.webp", cap:"Rayonnante" },
+  { src:"images/IMG_1434.webp", cap:"Éclatante de bonheur" },
+  { src:"images/IMG_1435.webp", cap:"Un moment magique" },
+  { src:"images/IMG_1436.webp", cap:"Toujours aussi belle" },
+  { src:"images/IMG_1437.webp", cap:"Une douceur infinie" },
+  { src:"images/IMG_1438.webp", cap:"Simplement parfaite" },
+  { src:"images/IMG_1439.webp", cap:"Un charme fou" },
+  { src:"images/IMG_1440.webp", cap:"Le temps s'arrête" },
+  { src:"images/IMG_1441.webp", cap:"Sublime" },
+  { src:"images/IMG_1442.webp", cap:"Précieuse" },
+  { src:"images/IMG_1445.webp", cap:"Une étincelle" },
+  { src:"images/IMG_1447.webp", cap:"Magnifique" },
+  { src:"images/IMG_1449.webp", cap:"Solaire" },
+  { src:"images/IMG_1450.webp", cap:"Un bel instant" },
+  { src:"images/IMG_1451.webp", cap:"Divine" },
+  { src:"images/IMG_1452.webp", cap:"Unique" },
+  { src:"images/IMG_1453.webp", cap:"Irremplaçable" },
+  { src:"images/IMG_1455.webp", cap:"Une perle" },
+  { src:"images/IMG_1456.webp", cap:"Mon évidence" },
   { src:"images/09CE60D9-FDDD-43A0-AEC5-B7FCAE80E9B1.MOV", cap:"Un instant en mouvement" },
 ];
-const HERO_PHOTO = "images/1454.jpg";
+const HERO_PHOTO = "images/1454.webp";
 
 const MEMORIES = [
   { chapter:"Chapitre I", txt:"Le jour où tout a commencé" },
@@ -508,7 +525,11 @@ const MEMORIES = [
 
 /* ===================== LOADER ===================== */
 window.addEventListener("load", ()=>{
-  setTimeout(()=>document.getElementById("loader").classList.add("hidden"), 700);
+  document.getElementById("enterBtn").addEventListener("click", ()=>{
+    document.getElementById("loader").classList.add("hidden");
+    const audio = document.getElementById("bgAudio");
+    if(audio) { audio.play().catch(()=>{}); playing = true; document.getElementById("musicToggle").style.opacity = "1"; }
+  });
 });
 
 /* ===================== NAV MOBILE ===================== */
@@ -527,6 +548,11 @@ musicToggle.addEventListener("click", ()=>{
   if(audio){ playing ? audio.play().catch(()=>{}) : audio.pause(); }
 });
 
+/* Helper */
+const getMediaTag = (src) => src.toLowerCase().endsWith('.mov') || src.toLowerCase().endsWith('.mp4') 
+  ? `<video loading="lazy" autoplay loop muted playsinline src="${src}"></video>` 
+  : `<img loading="lazy" src="${src}" alt="Astou">`;
+
 /* ===================== BUILD GALLERY ===================== */
 const galleryGrid = document.getElementById("galleryGrid");
 PHOTOS.forEach((p,i)=>{
@@ -536,19 +562,15 @@ PHOTOS.forEach((p,i)=>{
   el.addEventListener("click", ()=>openLightbox(p.src));
   // tilt on mousemove
   el.addEventListener("mousemove", (e)=>{
+    if (window.innerWidth <= 900) return;
     const r = el.getBoundingClientRect();
     const x = (e.clientX - r.left)/r.width - 0.5;
     const y = (e.clientY - r.top)/r.height - 0.5;
     el.style.transform = `rotateY(${x*14}deg) rotateX(${-y*14}deg) translateZ(10px)`;
   });
-  el.addEventListener("mouseleave", ()=>{ el.style.transform = "rotateY(0) rotateX(0)"; });
+  el.addEventListener("mouseleave", ()=>{ if (window.innerWidth > 900) el.style.transform = "rotateY(0) rotateX(0)"; });
   galleryGrid.appendChild(el);
 });
-
-/* Helper */
-const getMediaTag = (src) => src.toLowerCase().endsWith('.mov') || src.toLowerCase().endsWith('.mp4') 
-  ? `<video loading="lazy" autoplay loop muted playsinline src="${src}"></video>` 
-  : `<img loading="lazy" src="${src}" alt="Astou">`;
 
 /* Lightbox */
 const lightbox = document.getElementById("lightbox");
@@ -557,10 +579,23 @@ function openLightbox(src){ lbContent.innerHTML = getMediaTag(src); lightbox.cla
 document.getElementById("lbClose").addEventListener("click", ()=>{ lightbox.classList.remove("open"); lbContent.innerHTML = ""; });
 lightbox.addEventListener("click", (e)=>{ if(e.target === lightbox) { lightbox.classList.remove("open"); lbContent.innerHTML = ""; } });
 
+/* ===================== FISHER-YATES SHUFFLE ===================== */
+function shuffleArray(array) {
+  let cur = array.length, temp, rand;
+  while (0 !== cur) {
+    rand = Math.floor(Math.random() * cur); cur -= 1;
+    temp = array[cur]; array[cur] = array[rand]; array[rand] = temp;
+  }
+  return array;
+}
+const globalShuffled = shuffleArray([...PHOTOS]);
+const memoryPhotos = globalShuffled.slice(0, MEMORIES.length);
+const tlPhotos = globalShuffled.slice(MEMORIES.length, MEMORIES.length * 2);
+
 /* ===================== MEMORY WALL ===================== */
 const wallGrid = document.getElementById("wallGrid");
 MEMORIES.forEach((m,i)=>{
-  const photo = PHOTOS[i % PHOTOS.length];
+  const photo = memoryPhotos[i % memoryPhotos.length];
   const el = document.createElement("div");
   el.className = "memory-card reveal";
   el.style.setProperty("--r", (Math.sin(i*2)*4).toFixed(1)+"deg");
@@ -588,7 +623,7 @@ renderBook();
 /* ===================== TIMELINE ===================== */
 const tlWrap = document.getElementById("tlWrap");
 MEMORIES.forEach((m,i)=>{
-  const photo = PHOTOS[(i+2) % PHOTOS.length];
+  const photo = tlPhotos[i % tlPhotos.length];
   const el = document.createElement("div");
   el.className = "tl-item";
   el.innerHTML = `<span class="tl-dot"></span>
@@ -717,6 +752,7 @@ document.querySelectorAll(".reveal, .tl-item").forEach(el=>io.observe(el));
   // ---- Mouse parallax ----
   let mouseX = 0, mouseY = 0, targetRotY = 0, targetRotX = 0;
   window.addEventListener("mousemove", (e)=>{
+    if(window.innerWidth <= 900) return;
     mouseX = (e.clientX / window.innerWidth) - 0.5;
     mouseY = (e.clientY / window.innerHeight) - 0.5;
   });
@@ -758,6 +794,30 @@ document.querySelectorAll(".reveal, .tl-item").forEach(el=>io.observe(el));
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 })();
+/* ===================== MAGIC CLICKS ===================== */
+document.addEventListener("click", (e)=>{
+  if(e.target.tagName==="BUTTON" || e.target.closest("button") || e.target.closest("nav") || e.target.closest(".book-nav") || e.target.closest("#musicToggle")) return;
+  const h = document.createElement("div");
+  h.innerHTML = "♥";
+  h.style.position = "fixed";
+  h.style.left = e.clientX + "px";
+  h.style.top = e.clientY + "px";
+  h.style.color = "var(--rose-poudre)";
+  h.style.fontSize = (15+Math.random()*15)+"px";
+  h.style.pointerEvents = "none";
+  h.style.zIndex = "9999";
+  h.style.transform = "translate(-50%, -50%)";
+  h.style.transition = "all 1s cubic-bezier(.2,.8,.2,1)";
+  document.body.appendChild(h);
+  
+  h.getBoundingClientRect(); // force reflow
+  
+  h.style.top = (e.clientY - 80 - Math.random()*40) + "px";
+  h.style.opacity = "0";
+  h.style.transform = `translate(-50%, -50%) rotate(${(Math.random()-0.5)*80}deg) scale(${1.2+Math.random()})`;
+  
+  setTimeout(()=>h.remove(), 1000);
+});
 </script>
 </body>
 </html>
